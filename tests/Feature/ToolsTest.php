@@ -11,6 +11,7 @@ use Isapp\LaravelForgeMcp\Tools\GetDeploymentTool;
 use Isapp\LaravelForgeMcp\Tools\GetServerLogTool;
 use Isapp\LaravelForgeMcp\Tools\GetServerTool;
 use Isapp\LaravelForgeMcp\Tools\GetSiteApplicationLogTool;
+use Isapp\LaravelForgeMcp\Tools\GetSiteEnvironmentTool;
 use Isapp\LaravelForgeMcp\Tools\GetSiteNginxAccessLogTool;
 use Isapp\LaravelForgeMcp\Tools\GetSiteNginxErrorLogTool;
 use Isapp\LaravelForgeMcp\Tools\GetSiteTool;
@@ -142,6 +143,21 @@ class ToolsTest extends ToolTestCase
 
         $this->assertFalse($response->isError());
         $this->assertStringContainsString('Connection refused', (string) $response->content());
+    }
+
+    public function test_get_site_environment(): void
+    {
+        $forge = $this->forge();
+        $forge->shouldReceive('siteEnvironment')->once()->with('acme', 986230, 2923815)
+            ->andReturn("APP_ENV=production\nAPP_KEY=base64:secret");
+
+        $response = $this->invokeTool(GetSiteEnvironmentTool::class, [
+            'serverId' => 986230,
+            'siteId' => 2923815,
+        ], $forge);
+
+        $this->assertFalse($response->isError());
+        $this->assertStringContainsString('APP_ENV=production', (string) $response->content());
     }
 
     public function test_get_site_nginx_access_log(): void
