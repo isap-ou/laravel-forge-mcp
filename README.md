@@ -17,6 +17,7 @@ replacement for the Node `@bretterer/forge-mcp-server` package and talks to the
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Configuration](#configuration)
+  - [API token](#api-token)
   - [Organization slug](#organization-slug)
 - [Usage](#usage)
 - [Tools](#tools)
@@ -29,7 +30,7 @@ replacement for the Node `@bretterer/forge-mcp-server` package and talks to the
 - PHP 8.2+
 - Laravel 12 or 13
 - `laravel/mcp` ^0.7
-- A Laravel Forge API token
+- A Laravel Forge **API v2** token (see [API token](#api-token))
 
 ## Installation
 
@@ -58,6 +59,35 @@ The package reuses the standard `laravel/forge-sdk` configuration. Add a
 FORGE_API_TOKEN=your-forge-api-token
 # FORGE_ORG_SLUG=your-org-slug
 ```
+
+### API token
+
+This package talks to the organization-scoped **Forge API v2**. To create a token:
+
+1. Open your [Forge account dashboard](https://forge.laravel.com) and click **API**.
+2. Click **Create token**, give it a name and an optional expiration date.
+3. Select the scopes the token should have, then click **Add token**.
+4. Copy the generated token into `FORGE_API_TOKEN`.
+
+**Scopes.** Forge lets you restrict a token to specific scopes. This package
+needs only the following:
+
+| Scope | Used for |
+|-------|----------|
+| `server:view` | Reading servers, sites, deployments and logs (all the `list_*` / `get_*` tools). |
+| `site:manage-deploys` | `deploy_site`, `get_deployment_script`, `update_deployment_script`, `toggle_quick_deploy`. |
+| `server:manage-services` | `reboot_server`. |
+| `organization:view` | Only when `FORGE_ORG_SLUG` is **not** set — the package lists your organizations to resolve the slug automatically. Not needed if you set the slug explicitly. |
+
+If you only use the read-only tools, `server:view` is enough (plus
+`organization:view` when the slug is auto-resolved). You do **not** need
+`server:manage-logs` — that scope only clears logs, while this server only reads
+them. A token missing a required scope makes the corresponding tool return a
+Forge authorization error.
+
+> The legacy Forge **API v1** is being retired (scheduled 30 June 2026). This
+> package only uses API v2, so create the token from the current dashboard as
+> described above.
 
 ### Organization slug
 
@@ -103,6 +133,9 @@ php artisan mcp:inspector forge
 | `get_server` | Get a server by ID. |
 | `list_sites` | List sites on a server. |
 | `get_site` | Get a site by ID. |
+| `get_site_nginx_access_log` | Nginx access log for a site. |
+| `get_site_nginx_error_log` | Nginx error log for a site (diagnose 5xx errors). |
+| `get_site_application_log` | Application log for a site (diagnose app errors). |
 | `deploy_site` | Trigger a deployment. |
 | `get_deployments` | Deployment history for a site. |
 | `get_deployment` | A single deployment, including status. |
@@ -111,6 +144,7 @@ php artisan mcp:inspector forge
 | `update_deployment_script` | Update the deployment script. |
 | `toggle_quick_deploy` | Enable/disable quick deploy (push-to-deploy). |
 | `reboot_server` | Reboot a server. |
+| `get_server_log` | Server-level log by key (diagnose server issues). |
 
 Every tool accepts an optional `organizationSlug` argument to override the
 resolved organization for that call.

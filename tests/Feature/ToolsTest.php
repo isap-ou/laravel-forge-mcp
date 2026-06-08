@@ -8,7 +8,11 @@ use Isapp\LaravelForgeMcp\Tools\GetDeploymentLogTool;
 use Isapp\LaravelForgeMcp\Tools\GetDeploymentScriptTool;
 use Isapp\LaravelForgeMcp\Tools\GetDeploymentsTool;
 use Isapp\LaravelForgeMcp\Tools\GetDeploymentTool;
+use Isapp\LaravelForgeMcp\Tools\GetServerLogTool;
 use Isapp\LaravelForgeMcp\Tools\GetServerTool;
+use Isapp\LaravelForgeMcp\Tools\GetSiteApplicationLogTool;
+use Isapp\LaravelForgeMcp\Tools\GetSiteNginxAccessLogTool;
+use Isapp\LaravelForgeMcp\Tools\GetSiteNginxErrorLogTool;
 use Isapp\LaravelForgeMcp\Tools\GetSiteTool;
 use Isapp\LaravelForgeMcp\Tools\ListServersTool;
 use Isapp\LaravelForgeMcp\Tools\ListSitesTool;
@@ -123,6 +127,66 @@ class ToolsTest extends ToolTestCase
 
         $this->assertFalse($response->isError());
         $this->assertStringContainsString('composer install failed', (string) $response->content());
+    }
+
+    public function test_get_server_log(): void
+    {
+        $forge = $this->forge();
+        $forge->shouldReceive('serverLog')->once()->with('acme', 986230, 'nginx_error')
+            ->andReturn('connect() failed (111: Connection refused)');
+
+        $response = $this->invokeTool(GetServerLogTool::class, [
+            'serverId' => 986230,
+            'logKey' => 'nginx_error',
+        ], $forge);
+
+        $this->assertFalse($response->isError());
+        $this->assertStringContainsString('Connection refused', (string) $response->content());
+    }
+
+    public function test_get_site_nginx_access_log(): void
+    {
+        $forge = $this->forge();
+        $forge->shouldReceive('siteNginxAccessLog')->once()->with('acme', 986230, 2923815)
+            ->andReturn('GET / HTTP/1.1" 200');
+
+        $response = $this->invokeTool(GetSiteNginxAccessLogTool::class, [
+            'serverId' => 986230,
+            'siteId' => 2923815,
+        ], $forge);
+
+        $this->assertFalse($response->isError());
+        $this->assertStringContainsString('200', (string) $response->content());
+    }
+
+    public function test_get_site_nginx_error_log(): void
+    {
+        $forge = $this->forge();
+        $forge->shouldReceive('siteNginxErrorLog')->once()->with('acme', 986230, 2923815)
+            ->andReturn('FastCGI sent in stderr: "PHP message"');
+
+        $response = $this->invokeTool(GetSiteNginxErrorLogTool::class, [
+            'serverId' => 986230,
+            'siteId' => 2923815,
+        ], $forge);
+
+        $this->assertFalse($response->isError());
+        $this->assertStringContainsString('FastCGI', (string) $response->content());
+    }
+
+    public function test_get_site_application_log(): void
+    {
+        $forge = $this->forge();
+        $forge->shouldReceive('siteApplicationLog')->once()->with('acme', 986230, 2923815)
+            ->andReturn('production.ERROR: Undefined variable');
+
+        $response = $this->invokeTool(GetSiteApplicationLogTool::class, [
+            'serverId' => 986230,
+            'siteId' => 2923815,
+        ], $forge);
+
+        $this->assertFalse($response->isError());
+        $this->assertStringContainsString('production.ERROR', (string) $response->content());
     }
 
     public function test_get_deployment_script(): void

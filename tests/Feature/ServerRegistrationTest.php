@@ -10,12 +10,12 @@ use ReflectionClass;
 
 class ServerRegistrationTest extends TestCase
 {
-    public function test_server_registers_all_twelve_tools(): void
+    public function test_server_registers_all_sixteen_tools(): void
     {
         /** @var array<int, class-string> $tools */
         $tools = (new ReflectionClass(ForgeServer::class))->getDefaultProperties()['tools'];
 
-        $this->assertCount(12, $tools);
+        $this->assertCount(16, $tools);
         $this->assertContains(ListServersTool::class, $tools);
         $this->assertContains(GetDeploymentLogTool::class, $tools);
     }
