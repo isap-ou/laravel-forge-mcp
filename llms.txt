@@ -1,0 +1,58 @@
+# Laravel Forge MCP
+
+> A native Laravel MCP (Model Context Protocol) server that exposes Laravel
+> Forge management as MCP tools. It wraps the official `laravel/forge-sdk`
+> (v4, Forge API v2) and is a Composer-installable replacement for the Node
+> `@bretterer/forge-mcp-server` package.
+
+Package: `isapp/laravel-forge-mcp` (Composer, MIT). Requires PHP 8.2+ and
+Laravel 11, 12 or 13. Registers a local (stdio) MCP server named `forge`,
+started with `php artisan mcp:start forge`.
+
+## Configuration
+
+Reuses the standard `laravel/forge-sdk` config in `config/services.php`:
+
+```php
+'forge' => [
+    'token' => env('FORGE_API_TOKEN'),
+    'organization' => env('FORGE_ORG_SLUG'), // optional; auto-resolved when omitted
+],
+```
+
+Forge API v2 scopes every server/site call to an organization. When the slug is
+not configured it is resolved automatically: one organization is used and
+cached; multiple organizations require `FORGE_ORG_SLUG` to be set, or an
+`organizationSlug` argument per tool call.
+
+## Tools
+
+- list_servers — list all servers in the organization
+- get_server — get a server by ID
+- list_sites — list sites on a server
+- get_site — get a site by ID
+- deploy_site — trigger a deployment
+- get_deployments — deployment history for a site
+- get_deployment — a single deployment, including status
+- get_deployment_log — output log for a deployment (diagnose failures)
+- get_deployment_script — get the deployment script
+- update_deployment_script — update the deployment script
+- toggle_quick_deploy — enable/disable quick deploy (push-to-deploy)
+- reboot_server — reboot a server
+
+Every tool accepts an optional `organizationSlug` argument.
+
+## Notes
+
+- Built on Forge API v2 (`/orgs/{slug}/...`). The Forge API v1 endpoints
+  `server load` and `reset deployment state` do not exist in v2 and are
+  intentionally absent.
+- Source: src/Tools/ (one class per tool), src/Servers/ForgeServer.php,
+  src/Support/OrganizationResolver.php.
+
+## Links
+
+- README: README.md
+- Agent/contributor guide: AGENTS.md
+- Laravel MCP: https://github.com/laravel/mcp
+- Laravel Forge SDK: https://github.com/laravel/forge-sdk
