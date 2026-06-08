@@ -54,6 +54,23 @@ src/
 4. Register it in `src/Servers/ForgeServer.php`'s `$tools` array.
 5. Add a test in `tests/Feature/ToolsTest.php`.
 
+If the tool changes Forge state, `use DisabledInReadOnlyMode` so it is dropped
+when `services.forge.read_only` is set. To gate a tool behind any other config,
+add a `shouldRegister(): bool` method — `laravel/mcp` skips registration (and
+calls) when it returns false. See `GetSiteEnvironmentTool`.
+
+## Safety flags
+
+Three optional `services.forge.*` flags (all default `false`), covered by
+`tests/Feature/GuardrailsTest.php`:
+
+- `read_only` — hides the state-changing tools via `DisabledInReadOnlyMode`.
+- `expose_environment` — gates `get_site_environment` (returns `.env` secrets).
+- `verbose_errors` — when false, `ForgeTool::handle()` returns a generic error
+  to the client and `report()`s the exception; our own
+  `OrganizationResolutionException` is always surfaced verbatim. The empty-token
+  guard throws `MissingForgeTokenException` from the `Forge` binding.
+
 ## Testing
 
 - Run: `composer test` (host PHP 8.3+, no Docker — this is a standalone package).

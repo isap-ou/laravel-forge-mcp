@@ -4,6 +4,7 @@ namespace Isapp\LaravelForgeMcp\Tools;
 
 use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Illuminate\JsonSchema\Types\Type;
+use Isapp\LaravelForgeMcp\Tools\Concerns\DisabledInReadOnlyMode;
 use Laravel\Forge\Forge;
 use Laravel\Mcp\Request;
 use Laravel\Mcp\Response;
@@ -12,6 +13,8 @@ use Laravel\Mcp\Server\Attributes\Description;
 #[Description('Update the deployment script for a site.')]
 class UpdateDeploymentScriptTool extends ForgeTool
 {
+    use DisabledInReadOnlyMode;
+
     protected string $name = 'update_deployment_script';
 
     protected function run(Request $request, Forge $forge, string $slug): Response

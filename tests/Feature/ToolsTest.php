@@ -276,16 +276,4 @@ class ToolsTest extends ToolTestCase
         $this->assertFalse($response->isError());
         $this->assertStringContainsString('Quick deploy disabled', (string) $response->content());
     }
-
-    public function test_forge_api_failure_returns_error(): void
-    {
-        $forge = $this->forge();
-        $forge->shouldReceive('server')->once()
-            ->andThrow(new \RuntimeException('Server not found.'));
-
-        $response = $this->invokeTool(GetServerTool::class, ['serverId' => 1], $forge);
-
-        $this->assertTrue($response->isError());
-        $this->assertStringContainsString('Server not found.', (string) $response->content());
-    }
 }

@@ -4,6 +4,7 @@ namespace Isapp\LaravelForgeMcp\Tools;
 
 use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Illuminate\JsonSchema\Types\Type;
+use Isapp\LaravelForgeMcp\Exceptions\OrganizationResolutionException;
 use Isapp\LaravelForgeMcp\Support\OrganizationResolver;
 use Laravel\Forge\CursorPaginator;
 use Laravel\Forge\Forge;
@@ -22,8 +23,16 @@ abstract class ForgeTool extends Tool
     {
         try {
             return $this->run($request, $forge, $this->resolveSlug($request, $organizations));
-        } catch (Throwable $exception) {
+        } catch (OrganizationResolutionException $exception) {
+            // Our own configuration errors are safe and actionable, so surface
+            // them verbatim regardless of verbosity.
             return Response::error($exception->getMessage());
+        } catch (Throwable $exception) {
+            report($exception);
+
+            return Response::error((bool) config('services.forge.verbose_errors', false)
+                ? $exception->getMessage()
+                : 'The Forge API request failed. Check the application logs for details.');
         }
     }
 
