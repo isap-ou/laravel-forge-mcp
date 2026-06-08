@@ -27,7 +27,7 @@ replacement for the Node `@bretterer/forge-mcp-server` package and talks to the
 ## Requirements
 
 - PHP 8.2+
-- Laravel 11, 12 or 13
+- Laravel 12 or 13
 - `laravel/mcp` ^0.7
 - A Laravel Forge API token
 
@@ -129,7 +129,7 @@ composer lint:test  # check coding standards without modifying files
 ## Contributing
 
 See [AGENTS.md](AGENTS.md) for architecture, conventions and how to add a tool.
-Pull requests run the test matrix (PHP 8.2–8.4 × Laravel 11–13) and Pint via
+Pull requests run the test matrix (PHP 8.2–8.4 × Laravel 12–13) and Pint via
 GitHub Actions.
 
 ## License

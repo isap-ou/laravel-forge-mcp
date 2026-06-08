@@ -6,7 +6,7 @@
 > `@bretterer/forge-mcp-server` package.
 
 Package: `isapp/laravel-forge-mcp` (Composer, MIT). Requires PHP 8.2+ and
-Laravel 11, 12 or 13. Registers a local (stdio) MCP server named `forge`,
+Laravel 12 or 13. Registers a local (stdio) MCP server named `forge`,
 started with `php artisan mcp:start forge`.
 
 ## Configuration
