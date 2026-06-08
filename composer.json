@@ -2,7 +2,18 @@
     "name": "isapp/laravel-forge-mcp",
     "description": "Native Laravel MCP server for managing Laravel Forge servers, sites and deployments via the Forge API v2.",
     "keywords": ["laravel", "mcp", "forge", "deployment", "ai"],
+    "homepage": "https://github.com/isap-ou/laravel-forge-mcp",
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Andrii Trush",
+            "email": "andrii.trush@isapp.be"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/isap-ou/laravel-forge-mcp/issues",
+        "source": "https://github.com/isap-ou/laravel-forge-mcp"
+    },
     "require": {
         "php": "^8.2",
         "illuminate/contracts": "^12.0|^13.0",
