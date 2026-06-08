@@ -7,7 +7,11 @@ use Isapp\LaravelForgeMcp\Tools\GetDeploymentLogTool;
 use Isapp\LaravelForgeMcp\Tools\GetDeploymentScriptTool;
 use Isapp\LaravelForgeMcp\Tools\GetDeploymentsTool;
 use Isapp\LaravelForgeMcp\Tools\GetDeploymentTool;
+use Isapp\LaravelForgeMcp\Tools\GetServerLogTool;
 use Isapp\LaravelForgeMcp\Tools\GetServerTool;
+use Isapp\LaravelForgeMcp\Tools\GetSiteApplicationLogTool;
+use Isapp\LaravelForgeMcp\Tools\GetSiteNginxAccessLogTool;
+use Isapp\LaravelForgeMcp\Tools\GetSiteNginxErrorLogTool;
 use Isapp\LaravelForgeMcp\Tools\GetSiteTool;
 use Isapp\LaravelForgeMcp\Tools\ListServersTool;
 use Isapp\LaravelForgeMcp\Tools\ListSitesTool;
@@ -35,6 +39,9 @@ class ForgeServer extends Server
         GetServerTool::class,
         ListSitesTool::class,
         GetSiteTool::class,
+        GetSiteNginxAccessLogTool::class,
+        GetSiteNginxErrorLogTool::class,
+        GetSiteApplicationLogTool::class,
         DeploySiteTool::class,
         GetDeploymentsTool::class,
         GetDeploymentTool::class,
@@ -43,5 +50,6 @@ class ForgeServer extends Server
         UpdateDeploymentScriptTool::class,
         ToggleQuickDeployTool::class,
         RebootServerTool::class,
+        GetServerLogTool::class,
     ];
 }

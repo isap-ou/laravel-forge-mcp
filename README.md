@@ -103,6 +103,9 @@ php artisan mcp:inspector forge
 | `get_server` | Get a server by ID. |
 | `list_sites` | List sites on a server. |
 | `get_site` | Get a site by ID. |
+| `get_site_nginx_access_log` | Nginx access log for a site. |
+| `get_site_nginx_error_log` | Nginx error log for a site (diagnose 5xx errors). |
+| `get_site_application_log` | Application log for a site (diagnose app errors). |
 | `deploy_site` | Trigger a deployment. |
 | `get_deployments` | Deployment history for a site. |
 | `get_deployment` | A single deployment, including status. |
@@ -111,6 +114,7 @@ php artisan mcp:inspector forge
 | `update_deployment_script` | Update the deployment script. |
 | `toggle_quick_deploy` | Enable/disable quick deploy (push-to-deploy). |
 | `reboot_server` | Reboot a server. |
+| `get_server_log` | Server-level log by key (diagnose server issues). |
 
 Every tool accepts an optional `organizationSlug` argument to override the
 resolved organization for that call.

@@ -16,7 +16,7 @@ v2**). It is a Composer-installable replacement for the Node
 ```
 src/
 ├── ForgeMcpServiceProvider.php   # binds Forge + OrganizationResolver, registers the local server
-├── Servers/ForgeServer.php       # the MCP server: lists the 12 tools
+├── Servers/ForgeServer.php       # the MCP server: lists the 16 tools
 ├── Support/OrganizationResolver.php  # resolves the Forge API v2 organization slug
 ├── Exceptions/OrganizationResolutionException.php
 └── Tools/
