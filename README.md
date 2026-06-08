@@ -77,6 +77,7 @@ needs only the following:
 | `server:view` | Reading servers, sites, deployments and logs (all the `list_*` / `get_*` tools). |
 | `site:manage-deploys` | `deploy_site`, `get_deployment_script`, `update_deployment_script`, `toggle_quick_deploy`. |
 | `server:manage-services` | `reboot_server`. |
+| `site:manage-environment` | `get_site_environment` (unverified — reading the env file may also be covered by `server:view`). |
 | `organization:view` | Only when `FORGE_ORG_SLUG` is **not** set — the package lists your organizations to resolve the slug automatically. Not needed if you set the slug explicitly. |
 
 If you only use the read-only tools, `server:view` is enough (plus
@@ -133,6 +134,7 @@ php artisan mcp:inspector forge
 | `get_server` | Get a server by ID. |
 | `list_sites` | List sites on a server. |
 | `get_site` | Get a site by ID. |
+| `get_site_environment` | Read a site's environment (.env) file. ⚠️ Exposes secrets. |
 | `get_site_nginx_access_log` | Nginx access log for a site. |
 | `get_site_nginx_error_log` | Nginx error log for a site (diagnose 5xx errors). |
 | `get_site_application_log` | Application log for a site (diagnose app errors). |

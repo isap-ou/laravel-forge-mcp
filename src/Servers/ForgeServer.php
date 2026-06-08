@@ -10,6 +10,7 @@ use Isapp\LaravelForgeMcp\Tools\GetDeploymentTool;
 use Isapp\LaravelForgeMcp\Tools\GetServerLogTool;
 use Isapp\LaravelForgeMcp\Tools\GetServerTool;
 use Isapp\LaravelForgeMcp\Tools\GetSiteApplicationLogTool;
+use Isapp\LaravelForgeMcp\Tools\GetSiteEnvironmentTool;
 use Isapp\LaravelForgeMcp\Tools\GetSiteNginxAccessLogTool;
 use Isapp\LaravelForgeMcp\Tools\GetSiteNginxErrorLogTool;
 use Isapp\LaravelForgeMcp\Tools\GetSiteTool;
@@ -39,6 +40,7 @@ class ForgeServer extends Server
         GetServerTool::class,
         ListSitesTool::class,
         GetSiteTool::class,
+        GetSiteEnvironmentTool::class,
         GetSiteNginxAccessLogTool::class,
         GetSiteNginxErrorLogTool::class,
         GetSiteApplicationLogTool::class,
