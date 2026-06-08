@@ -162,6 +162,29 @@ Inspect it interactively with:
 php artisan mcp:inspector forge
 ```
 
+### Read-only mode
+
+To let an agent observe but never change Forge state, run the server with
+[`read_only`](#safety-flags) enabled. MCP clients can pass it as an environment
+variable on the server command:
+
+```json
+{
+    "mcpServers": {
+        "forge": {
+            "command": "php",
+            "args": ["artisan", "mcp:start", "forge"],
+            "env": { "FORGE_MCP_READ_ONLY": "true" }
+        }
+    }
+}
+```
+
+With this set, `deploy_site`, `reboot_server`, `update_deployment_script` and
+`toggle_quick_deploy` are not registered and cannot be called. (This relies on
+the `read_only` key being wired into `config/services.php` as shown in
+[Configuration](#configuration).)
+
 ## Tools
 
 | Tool | Description |
