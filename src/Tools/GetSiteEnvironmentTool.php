@@ -14,6 +14,15 @@ class GetSiteEnvironmentTool extends ForgeTool
 {
     protected string $name = 'get_site_environment';
 
+    /**
+     * Only expose this tool when explicitly enabled: it returns the site's
+     * environment file, which contains secrets.
+     */
+    public function shouldRegister(): bool
+    {
+        return (bool) config('services.forge.expose_environment', false);
+    }
+
     protected function run(Request $request, Forge $forge, string $slug): Response
     {
         $environment = $forge->siteEnvironment(

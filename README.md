@@ -19,6 +19,7 @@ replacement for the Node `@bretterer/forge-mcp-server` package and talks to the
 - [Configuration](#configuration)
   - [API token](#api-token)
   - [Organization slug](#organization-slug)
+  - [Safety flags](#safety-flags)
 - [Usage](#usage)
 - [Tools](#tools)
 - [Testing](#testing)
@@ -52,12 +53,26 @@ The package reuses the standard `laravel/forge-sdk` configuration. Add a
     // to resolve it automatically; set it when the token can access more than
     // one organization.
     'organization' => env('FORGE_ORG_SLUG'),
+
+    // Optional safety/behaviour flags (all default to false):
+    // Expose only read-only tools; deploy, reboot, deployment-script update
+    // and quick-deploy toggle are not registered.
+    'read_only' => env('FORGE_MCP_READ_ONLY', false),
+    // Register the get_site_environment tool. It returns the site's .env
+    // (secrets), so it is disabled unless you opt in.
+    'expose_environment' => env('FORGE_MCP_EXPOSE_ENVIRONMENT', false),
+    // Return raw Forge/SDK exception messages to the client. When false the
+    // client gets a generic message and the full error goes to the log.
+    'verbose_errors' => env('FORGE_MCP_VERBOSE_ERRORS', false),
 ],
 ```
 
 ```dotenv
 FORGE_API_TOKEN=your-forge-api-token
 # FORGE_ORG_SLUG=your-org-slug
+# FORGE_MCP_READ_ONLY=true
+# FORGE_MCP_EXPOSE_ENVIRONMENT=true
+# FORGE_MCP_VERBOSE_ERRORS=true
 ```
 
 ### API token
@@ -99,6 +114,27 @@ Forge API v2 requires an organization slug on every server and site call. When
 - multiple organizations → set `FORGE_ORG_SLUG`, or pass `organizationSlug` to
   an individual tool call.
 
+### Safety flags
+
+This server hands an AI agent control over your Forge infrastructure, so it
+ships with conservative defaults. All three flags live under `services.forge`
+and default to `false`:
+
+- **`read_only`** — when `true`, only read-only tools are registered. The
+  state-changing tools (`deploy_site`, `reboot_server`,
+  `update_deployment_script`, `toggle_quick_deploy`) are neither listed nor
+  callable. Use this when you only want the agent to observe.
+- **`expose_environment`** — `get_site_environment` returns a site's `.env`
+  contents, which include secrets, so it is **disabled by default**. Enable it
+  only when you understand that the secrets are sent to the MCP client/model.
+- **`verbose_errors`** — by default a failed Forge call returns a generic
+  message to the client and logs the full exception (via `report()`), so
+  internal details (hostnames, URLs) are not leaked into the model context. Set
+  to `true` in development to return the raw exception message instead.
+
+There are no per-call confirmation prompts at the package level — gate risky
+operations with `read_only` or by trusting the operator/client.
+
 ## Usage
 
 The package registers a local (stdio) MCP server named `forge`. Start it with:
@@ -134,7 +170,7 @@ php artisan mcp:inspector forge
 | `get_server` | Get a server by ID. |
 | `list_sites` | List sites on a server. |
 | `get_site` | Get a site by ID. |
-| `get_site_environment` | Read a site's environment (.env) file. ⚠️ Exposes secrets. |
+| `get_site_environment` | Read a site's environment (.env) file. ⚠️ Exposes secrets; disabled unless `expose_environment` is true. |
 | `get_site_nginx_access_log` | Nginx access log for a site. |
 | `get_site_nginx_error_log` | Nginx error log for a site (diagnose 5xx errors). |
 | `get_site_application_log` | Application log for a site (diagnose app errors). |

@@ -4,6 +4,7 @@ namespace Isapp\LaravelForgeMcp;
 
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Isapp\LaravelForgeMcp\Exceptions\MissingForgeTokenException;
 use Isapp\LaravelForgeMcp\Servers\ForgeServer;
 use Isapp\LaravelForgeMcp\Support\OrganizationResolver;
 use Laravel\Forge\Forge;
@@ -17,7 +18,13 @@ class ForgeMcpServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(Forge::class, static function (Application $app): Forge {
-            return new Forge((string) $app['config']->get('services.forge.token'));
+            $token = (string) $app['config']->get('services.forge.token');
+
+            if ($token === '') {
+                throw MissingForgeTokenException::create();
+            }
+
+            return new Forge($token);
         });
 
         $this->app->singleton(OrganizationResolver::class, static function (Application $app): OrganizationResolver {
