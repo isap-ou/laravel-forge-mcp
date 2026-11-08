@@ -30,7 +30,8 @@ replacement for the Node `@bretterer/forge-mcp-server` package and talks to the
 
 - PHP 8.2+
 - Laravel 12 or 13
-- `laravel/mcp` ^0.7
+- `laravel/mcp` ^0.7 or ^1.1
+- `laravel/forge-sdk` ^4.1.1
 - A Laravel Forge **API v2** token (see [API token](#api-token))
 
 ## Installation
